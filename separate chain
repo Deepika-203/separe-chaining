@@ -1,0 +1,152 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct hashtable
+{
+        int data;
+        struct hashtable *next;
+};
+typedef struct hashtable node;
+void insert(node *[],int);
+void delete(node *[],int);
+void search(node *[],int);
+void display(node *[]);
+void main()
+{
+        int i,x,ch;
+        node *t[10];
+        for(i=0;i<10;i++)
+        {
+                t[i]=(node*)malloc(sizeof(node));
+                t[i]->next=NULL;
+        }
+        while(1)
+        {
+                printf("\n1-insert \n2-delete \n3-search \n4-display \n5-quit \n");
+                printf("enter choice :\n");
+                scanf("%d",&ch);
+                switch(ch)
+                {
+                        case 1:printf("enter element to insert:\n");
+                               scanf("%d",&x);
+                               insert(t,x);
+                               break;
+                        case 2:printf("enter element to delete :\n");
+                               scanf("%d",&x);
+                               delete(t,x);
+                               break;
+                        case 3:printf("enter element to search :\n");
+                               scanf("%d",&x);
+                               search(t,x);
+                               break;
+                        case 4:printf("elements in hashtable are :\n");
+                               display(t);
+                               break;
+                        case 5:exit(0);
+                               break;
+                        default :printf("enter correct choice \n");
+                                 break;
+                }
+        }
+}
+int hash(int x)
+{
+        return x%10;
+}
+void insert(node *t[10],int x)
+{
+        node *p;
+        int i;
+        i=hash(x);
+        p=(node*)malloc(sizeof(node));
+        p->data=x;
+        p->next=NULL;
+        if(t[i]->next==NULL)
+        {
+                t[i]->next=p;
+        }
+        else
+        {
+                p->next=t[i]->next;
+                t[i]->next=p;
+        }
+}
+void delete(node *t[10],int x)
+{
+        int i,flag=0;
+        i=hash(x);
+        node *temp,*temp1;
+        temp=t[i]->next;
+        temp1=t[i];
+        while(temp!=NULL)
+        {
+                if(temp->data==x)
+                {
+                        flag=1;
+                        break;
+                }
+                else
+                {
+                        temp1=temp1->next;
+                        temp=temp->next;
+                }
+        }
+        if(flag==1)
+        {
+                temp1->next=temp->next;
+                free(temp);
+        }
+        else
+        {
+                printf("element %d not found to delete \n",x);
+        }
+}
+void search(node *t[10],int x)
+{
+        int flag=0,i;
+        i=hash(x);
+        node *temp;
+        temp=t[i]->next;
+        if(temp==NULL)
+        {
+                printf("hashtable is empty\n");
+        }
+        else
+        {
+                while(temp!=NULL)
+                {
+                        if(temp->data==x)
+                        {
+                                flag=1;
+                                break;
+                        }
+                        else
+                        {
+                                temp=temp->next;
+                        }
+                }
+        }
+        if(flag==1)
+        {
+                printf("element %d is found",x);
+        }
+        else
+        {
+                printf("element %d is not found ",x);
+        }
+}
+void display(node *t[10])
+{
+        node *temp;
+        int i;
+        for(i=0;i<10;i++)
+        {
+                temp=t[i]->next;
+                printf("%d ||->",i);
+                while(temp!=NULL)
+                {
+                        printf("|%d|->",temp->data);
+                        temp=temp->next;
+                }
+                printf("NULL\n");
+        }
+}
